@@ -64,6 +64,23 @@ body {
   font-size: 14px;
 }
 
+.settings-btn {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.settings-btn:hover {
+  color: var(--fg);
+  background: var(--row-hover);
+}
+
 .search-row {
   padding: 8px 12px;
   border-bottom: 1px solid var(--border);
@@ -184,23 +201,6 @@ body {
   margin: 4px 12px 10px;
   color: var(--muted);
   font-size: 12px;
-}
-
-.popup-footer {
-  border-top: 1px solid var(--border);
-  padding: 10px 12px;
-  text-align: center;
-}
-
-.popup-footer a {
-  color: var(--fg);
-  text-decoration: none;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.popup-footer a:hover {
-  text-decoration: underline;
 }
 
 /* Toggle switch */

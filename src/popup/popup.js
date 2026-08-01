@@ -117,8 +117,7 @@
     render();
   });
 
-  openOptions.addEventListener('click', (e) => {
-    e.preventDefault();
+  openOptions.addEventListener('click', () => {
     chrome.runtime.openOptionsPage();
     window.close();
   });
