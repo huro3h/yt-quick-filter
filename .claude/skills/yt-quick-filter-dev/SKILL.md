@@ -149,6 +149,18 @@ language (gray circle+slash) is reused inline for the per-card block button
   re-add just re-enables the existing entry and refreshes `meta.handle`/`meta.name`
   if newly provided.
 
+## Repo hygiene: no real examples in comments/docs
+
+This repo is **public** (`github.com/huro3h/yt-quick-filter`). While
+implementing or debugging, it's normal to reference a real article, channel,
+or other identifying source as a concrete example (e.g. testing handle
+resolution against an actual channel). That's fine for in-conversation
+discussion, but **never carry it into code comments, commit messages, or
+this skill file** — anything that ends up in the public repo. Use an
+obviously-fake placeholder instead (e.g. `@サンプルチャンネル名`, `Some Channel`,
+`example-channel`). If a real example already leaked into a comment, replace
+it before committing.
+
 ## Gotchas hit during development
 
 - CSS specificity: a `html[dark] .selector` rule can silently out-rank a
