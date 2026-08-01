@@ -141,11 +141,13 @@
     const idInUrl = /\/channel\/(UC[\w-]{20,})/.exec(value);
     if (idInUrl) return { type: 'id', value: idInUrl[1] };
 
-    const handleInUrl = /\/(@[\w.-]+)/.exec(value);
+    // Handles can contain non-Latin characters (e.g. "@サンプルチャンネル名"), so
+    // match everything up to the next URL delimiter/whitespace rather than \w.
+    const handleInUrl = /\/(@[^/?#\s]+)/.exec(value);
     if (handleInUrl) return { type: 'handle', value: handleInUrl[1].toLowerCase() };
 
     if (/^UC[\w-]{20,}$/.test(value)) return { type: 'id', value };
-    if (/^@[\w.-]+$/.test(value)) return { type: 'handle', value: value.toLowerCase() };
+    if (/^@[^\s/?#]+$/.test(value)) return { type: 'handle', value: value.toLowerCase() };
 
     return null;
   }

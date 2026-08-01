@@ -78,8 +78,10 @@
     return m ? m[1] : null;
   }
 
+  // Handles can contain non-Latin characters (e.g. "@サンプルチャンネル名"), so
+  // match everything up to the next URL delimiter rather than restricting to \w.
   function extractChannelHandle(href) {
-    const m = /^\/(@[\w.-]+)/.exec(href || '');
+    const m = /^\/(@[^/?#]+)/.exec(href || '');
     return m ? m[1].toLowerCase() : null;
   }
 
