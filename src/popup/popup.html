@@ -25,12 +25,24 @@
     </div>
 
     <div class="tab-bar" role="tablist">
-      <button type="button" class="tab-btn active" id="tab-title" data-tab="title" role="tab" aria-selected="true">
-        タイトル <span class="count" id="title-count">0</span>
-      </button>
-      <button type="button" class="tab-btn" id="tab-channel" data-tab="channel" role="tab" aria-selected="false">
-        チャンネル <span class="count" id="channel-count">0</span>
-      </button>
+      <div class="tab-item">
+        <label class="switch small" title="タイトルフィルターを一括ON/OFF">
+          <input type="checkbox" id="title-category-toggle" />
+          <span class="slider"></span>
+        </label>
+        <button type="button" class="tab-btn active" id="tab-title" data-tab="title" role="tab" aria-selected="true">
+          タイトル <span class="count" id="title-count">0</span>
+        </button>
+      </div>
+      <div class="tab-item">
+        <label class="switch small" title="チャンネルフィルターを一括ON/OFF">
+          <input type="checkbox" id="channel-category-toggle" />
+          <span class="slider"></span>
+        </label>
+        <button type="button" class="tab-btn" id="tab-channel" data-tab="channel" role="tab" aria-selected="false">
+          チャンネル <span class="count" id="channel-count">0</span>
+        </button>
+      </div>
     </div>
 
     <div class="list-section" id="panel-title" role="tabpanel">

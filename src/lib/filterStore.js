@@ -13,9 +13,14 @@
     TITLE: 'title',
   };
 
+  function defaultCategoryEnabled() {
+    return { [KIND.CHANNEL_ID]: true, [KIND.TITLE]: true };
+  }
+
   function defaultData() {
     return {
       enabled: true,
+      categoryEnabled: defaultCategoryEnabled(),
       filters: [],
     };
   }
@@ -31,6 +36,9 @@
         if (!data || !Array.isArray(data.filters)) {
           resolve(defaultData());
           return;
+        }
+        if (!data.categoryEnabled) {
+          data.categoryEnabled = defaultCategoryEnabled();
         }
         resolve(data);
       });
@@ -100,6 +108,16 @@
   async function setGlobalEnabled(enabled) {
     const data = await getData();
     data.enabled = enabled;
+    await setData(data);
+    return data;
+  }
+
+  // Toggle every filter of a given kind on/off at once, without touching each
+  // filter's own `enabled` flag (so re-enabling the category restores whatever
+  // individual state each filter had before).
+  async function setCategoryEnabled(kind, enabled) {
+    const data = await getData();
+    data.categoryEnabled[kind] = enabled;
     await setData(data);
     return data;
   }
@@ -179,8 +197,11 @@
 
     if (!matchers.enabled) return matchers;
 
+    const categoryEnabled = data.categoryEnabled || defaultCategoryEnabled();
+
     for (const f of data.filters) {
       if (!f.enabled) continue;
+      if (categoryEnabled[f.kind] === false) continue;
       if (f.kind === KIND.CHANNEL_ID) {
         matchers.channelIds.add(f.value.trim());
         if (f.handle) matchers.channelHandles.add(f.handle.toLowerCase());
@@ -203,6 +224,7 @@
     removeFilter,
     setFilterEnabled,
     setGlobalEnabled,
+    setCategoryEnabled,
     buildTitleRegex,
     compileMatchers,
     channelDisplayLabel,

@@ -39,6 +39,10 @@ Single `chrome.storage.local` key `ytQuickFilterData`:
 ```js
 {
   enabled: true,           // global kill switch
+  categoryEnabled: {        // per-kind bulk ON/OFF, independent of each filter's own `enabled`
+    channelId: true,
+    title: true,
+  },
   filters: [
     {
       id: "abc123",         // generated, not the channel id
@@ -55,6 +59,17 @@ Single `chrome.storage.local` key `ytQuickFilterData`:
 
 Title filters support `/pattern/flags` regex syntax, else
 fall back to a plain case-insensitive substring match (`FilterStore.buildTitleRegex`).
+
+A filter of kind `k` is only actually active when all three layers agree:
+`data.enabled && data.categoryEnabled[k] && filter.enabled` (enforced in
+`FilterStore.compileMatchers`, popup priority: global > per-kind bulk >
+individual). `categoryEnabled` is a separate override, not a mass-write to
+each filter's `enabled` — toggling a category off and back on restores
+whatever individual on/off state each filter already had. The popup's
+per-kind bulk switches live inline in the tab bar, to the left of each
+`.tab-btn` label (`.tab-item` wrapping both in `popup.html`) — they're
+siblings of the tab button, not nested inside it, since a `<button>` can't
+validly contain another interactive control like a checkbox.
 
 ## Why channel filtering needs both an ID and a handle
 
