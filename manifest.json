@@ -20,6 +20,17 @@
   "background": {
     "service_worker": "src/scripts/background.js"
   },
+  "commands": {
+    "01_toggle-global": {
+      "description": "拡張機能全体のON/OFFを切り替え"
+    },
+    "02_toggle-title-filters": {
+      "description": "タイトルフィルターの一括ON/OFFを切り替え"
+    },
+    "03_toggle-channel-filters": {
+      "description": "チャンネルフィルターの一括ON/OFFを切り替え"
+    }
+  },
   "content_scripts": [
     {
       "matches": ["*://www.youtube.com/*", "*://m.youtube.com/*"],

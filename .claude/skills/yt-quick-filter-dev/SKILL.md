@@ -18,19 +18,74 @@ keyword filtering only** — no video ID / comment / advanced JS blocking.
 
 ```
 manifest.json                 MV3 manifest
-assets/icons/{16,48,128}.png  Toolbar icon
+assets/icons/{16,48,128}.png     Toolbar icon, gray — shown when the global switch is off
+assets/icons/{16,48,128}-on.png  Same glyph recolored red — shown when the global switch is on
 src/lib/filterStore.js        Shared data model + storage + resolvers (plain script, attaches to window/self.FilterStore)
-src/scripts/background.js     Sets default storage on install. Nothing else.
+src/scripts/background.js     Sets default storage on install; handles keyboard shortcut commands.
 src/scripts/content.js        Runs on youtube.com: DOM filtering + "block channel" button
 src/scripts/content.css       Styles for the injected block button + toast
 src/popup/                    Popup UI: master ON/OFF + per-filter toggle list + search
 src/options/                  Options page: add/remove filters, backup import/export
 ```
 
-`filterStore.js` is loaded as a plain (non-module) script in all three
-contexts (content script, popup, options), so `FilterStore.*` is available as
-a global everywhere. Content script load order in the manifest matters:
-`filterStore.js` must precede `content.js`.
+`filterStore.js` is loaded as a plain (non-module) script in all four
+contexts (content script, popup, options, background service worker), so
+`FilterStore.*` is available as a global everywhere. Content script load
+order in the manifest matters: `filterStore.js` must precede `content.js`.
+The background service worker is classic (no `"type": "module"` in the
+manifest), so it pulls it in with `importScripts('../lib/filterStore.js')`
+instead of a `<script>` tag.
+
+## Keyboard shortcuts
+
+Three `commands` are declared in `manifest.json` (`01_toggle-global`,
+`02_toggle-title-filters`, `03_toggle-channel-filters`), all with **no
+`suggested_key`** — deliberately left unassigned so installing the extension
+doesn't silently claim a key combo the user may already use elsewhere. Users
+bind their own at `chrome://extensions/shortcuts`. `background.js` listens
+via `chrome.commands.onCommand` and flips the same storage fields the popup's
+switches do (`enabled` / `categoryEnabled[kind]`), so the popup (open or not)
+picks up the change through the existing `chrome.storage.onChanged` listener.
+
+The `01_`/`02_`/`03_` prefixes on the command names are load-bearing, not
+cosmetic: `chrome://extensions/shortcuts` lists an extension's commands
+sorted by the command's internal name (the manifest key), not by its
+`description` text or manifest order. Without the prefix the list came out
+as channel/global/title (alphabetical on `toggle-channel-filters` <
+`toggle-global` < `toggle-title-filters`), which didn't match the intended
+global→title→channel reading order. If a fourth command is ever added, give
+it a `04_` prefix (or renumber) to land where intended.
+
+### Badge feedback
+
+Pressing a shortcut changes storage silently (no popup, no notification), so
+the toolbar badge doubles as the only visible confirmation. The action API
+only supports one badge per icon, so both category states are packed into a
+2-letter badge text (`background.js`, `badgeTextFor`): `T`/`C` when that
+category is actually filtering, `-` when it isn't — "actually filtering"
+means the global switch AND that category's switch are both on, not just
+the category switch alone, so the badge reflects real behavior rather than
+a config value that might be moot. `refreshActionUi()` (`background.js`)
+handles both the badge and the toolbar icon color together, and runs on
+install, browser startup, and every `chrome.storage.onChanged` for the data
+key, so both stay correct whether the state changed via a shortcut, the
+popup, or the options page.
+
+The icon color reflects only the global switch (`data.enabled`), not the
+per-category state — `chrome.action.setIcon` swaps between the two static
+PNG sets above rather than drawing anything at runtime. The red variant was
+generated once by taking each gray PNG's alpha channel and re-filling the
+RGB with the popup's `--accent` red (`#e62117`), so the antialiased edges
+match exactly; regenerate it the same way if the base icon glyph ever
+changes.
+
+`chrome.action.setIcon({ path: 'assets/icons/16.png' })` (a plain
+manifest-relative string) intermittently threw `Failed to set icon '...':
+Failed to fetch` when called from this service worker — resolve the path
+with `chrome.runtime.getURL(...)` first (see `iconSet()`) and it works
+reliably. This bit us for *both* icon states, not just the new one: the
+default stored `enabled` is `true`, so the "on" icon is what a fresh install
+tries to set first, making it look like only the new file was broken.
 
 ## Storage schema
 
@@ -192,6 +247,11 @@ it before committing.
   page looks like, but it's a fast and reliable way to check what's embedded
   in YouTube's server-rendered HTML/JSON (canonical links, `vanityChannelUrl`,
   `channelMetadataRenderer`) before writing extraction regexes.
+- Removing and re-loading an unpacked extension from `chrome://extensions`
+  is *not* the fix for `chrome.action.setIcon` "Failed to fetch" — that's a
+  relative-path resolution bug in the service worker, not a stale file
+  listing. See "Badge feedback" above for the actual fix
+  (`chrome.runtime.getURL`).
 
 ## Testing
 
@@ -209,4 +269,3 @@ far).
   channel encountered again elsewhere doesn't refetch.
 - Title filter management could use the same "block button" pattern (a
   quick "block this title keyword" affordance) if that's ever wanted.
-- Consider surfacing blocked-count stats (e.g. badge text on the toolbar icon).
