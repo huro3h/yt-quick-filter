@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "YT Quick Filter",
+  "version": "0.1.0",
+  "description": "Block YouTube channels and video titles, with quick ON/OFF toggles from the popup.",
+  "icons": {
+    "16": "assets/icons/16.png",
+    "48": "assets/icons/48.png",
+    "128": "assets/icons/128.png"
+  },
+  "action": {
+    "default_popup": "src/popup/popup.html",
+    "default_icon": {
+      "16": "assets/icons/16.png",
+      "48": "assets/icons/48.png",
+      "128": "assets/icons/128.png"
+    }
+  },
+  "options_page": "src/options/options.html",
+  "background": {
+    "service_worker": "src/scripts/background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://www.youtube.com/*", "*://m.youtube.com/*"],
+      "js": ["src/lib/filterStore.js", "src/scripts/content.js"],
+      "css": ["src/scripts/content.css"],
+      "run_at": "document_start"
+    }
+  ],
+  "permissions": ["storage"],
+  "host_permissions": ["*://www.youtube.com/*", "*://m.youtube.com/*"]
+}

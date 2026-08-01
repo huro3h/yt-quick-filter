@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>YT Quick Filter</title>
+<link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="popup">
+    <header class="popup-header">
+      <div class="brand">
+        <img src="../../assets/icons/48.png" alt="" class="brand-icon" />
+        <span class="brand-name">YT Quick Filter</span>
+      </div>
+      <label class="switch" title="拡張機能全体のON/OFF">
+        <input type="checkbox" id="global-toggle" />
+        <span class="slider"></span>
+      </label>
+    </header>
+
+    <div class="search-row">
+      <input type="search" id="search-input" placeholder="フィルターを検索..." autocomplete="off" />
+    </div>
+
+    <div class="list-section">
+      <div class="list-section-title">
+        チャンネル <span class="count" id="channel-count">0</span>
+      </div>
+      <ul class="filter-list" id="channel-list"></ul>
+      <p class="empty-hint" id="channel-empty">登録されたチャンネルフィルターはありません</p>
+    </div>
+
+    <div class="list-section">
+      <div class="list-section-title">
+        タイトル <span class="count" id="title-count">0</span>
+      </div>
+      <ul class="filter-list" id="title-list"></ul>
+      <p class="empty-hint" id="title-empty">登録されたタイトルフィルターはありません</p>
+    </div>
+
+    <footer class="popup-footer">
+      <a href="#" id="open-options">＋ 新しいフィルターを追加 / 管理</a>
+    </footer>
+  </div>
+
+  <script src="../lib/filterStore.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
