@@ -23,24 +23,15 @@
       </label>
       <span class="global-status" id="global-status">有効</span>
     </header>
-    <div class="status-line header-status-line" id="backup-status"></div>
 
     <main class="page-main">
-      <div class="card-row">
-        <section class="card">
-          <h2>チャンネルを追加</h2>
-          <form id="channel-form" class="add-form">
-            <input type="text" id="channel-value" placeholder="例: UCxxxxxxxxxxxxxxxxxxxxxx または @ハンドル名" autocomplete="off" />
-            <button type="submit">＋ 追加</button>
-          </form>
-          <p class="hint">
-            チャンネルID(<code>UC...</code>)・<code>@ハンドル名</code>・チャンネルURLのいずれでも入力できます。もう一方の識別子は自動で解決して一緒に保存されます。
-          </p>
-          <div class="status-line" id="channel-status"></div>
-        </section>
+      <div class="search-row-page">
+        <input type="search" id="search-input" placeholder="フィルターを検索..." autocomplete="off" />
+      </div>
 
-        <section class="card">
-          <h2>タイトルキーワードを追加</h2>
+      <div class="card-row column-row">
+        <section class="card column-card">
+          <h2>タイトルキーワード</h2>
           <form id="title-form" class="add-form">
             <input type="text" id="title-value" placeholder="例: 【切り抜き】 または /正規表現/i" autocomplete="off" />
             <button type="submit">＋ 追加</button>
@@ -48,27 +39,33 @@
           <p class="hint">
             通常は部分一致のキーワードとして扱われます。<code>/pattern/flags</code> の形式で書くと正規表現として扱われます。
           </p>
+
+          <div class="filter-group">
+            <h3>登録済み <span class="count" id="title-count">0</span></h3>
+            <ul class="filter-list column-filter-list" id="title-list"></ul>
+          </div>
+        </section>
+
+        <section class="card column-card">
+          <h2>チャンネル</h2>
+          <form id="channel-form" class="add-form">
+            <input type="text" id="channel-value" placeholder="例: UCxxxxxxxxxxxxxxxxxxxxxx または @ハンドル名" autocomplete="off" />
+            <button type="submit">＋ 追加</button>
+          </form>
+          <p class="hint">
+            チャンネルID(<code>UC...</code>)・<code>@ハンドル名</code>・チャンネルURLのいずれでも入力できます。もう一方の識別子は自動で解決して一緒に保存されます。
+          </p>
+
+          <div class="filter-group">
+            <h3>登録済み <span class="count" id="channel-count">0</span></h3>
+            <ul class="filter-list column-filter-list" id="channel-list"></ul>
+          </div>
         </section>
       </div>
-
-      <section class="card">
-        <div class="card-header-row">
-          <h2>登録済みフィルター</h2>
-          <input type="search" id="search-input" placeholder="検索..." autocomplete="off" />
-        </div>
-
-        <div class="filter-group">
-          <h3>チャンネル <span class="count" id="channel-count">0</span></h3>
-          <ul class="filter-list" id="channel-list"></ul>
-        </div>
-
-        <div class="filter-group">
-          <h3>タイトル <span class="count" id="title-count">0</span></h3>
-          <ul class="filter-list" id="title-list"></ul>
-        </div>
-      </section>
     </main>
   </div>
+
+  <div class="toast" id="toast"></div>
 
   <script src="../lib/filterStore.js"></script>
   <script src="options.js"></script>

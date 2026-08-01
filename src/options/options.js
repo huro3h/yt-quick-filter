@@ -24,13 +24,12 @@
   const titleCount = $('title-count');
   const channelForm = $('channel-form');
   const channelValue = $('channel-value');
-  const channelStatus = $('channel-status');
   const titleForm = $('title-form');
   const titleValue = $('title-value');
   const exportBtn = $('export-btn');
   const importBtn = $('import-btn');
   const importFile = $('import-file');
-  const backupStatus = $('backup-status');
+  const toast = $('toast');
 
   let currentData = null;
   let currentQuery = '';
@@ -124,18 +123,16 @@
     }
   }
 
-  const statusTimers = new WeakMap();
+  let toastTimer = null;
 
-  function flashStatus(el, text, autoHide = true) {
-    el.textContent = text;
-    const prevTimer = statusTimers.get(el);
-    if (prevTimer) clearTimeout(prevTimer);
+  function showToast(text, autoHide = true) {
+    toast.textContent = text;
+    requestAnimationFrame(() => toast.classList.add('toast-visible'));
+    clearTimeout(toastTimer);
     if (!autoHide) return;
-    const timer = setTimeout(() => {
-      el.textContent = '';
-      statusTimers.delete(el);
-    }, 2000);
-    statusTimers.set(el, timer);
+    toastTimer = setTimeout(() => {
+      toast.classList.remove('toast-visible');
+    }, 2200);
   }
 
   // Accepts a channel id, an "@handle", or a full channel URL of either form.
@@ -177,14 +174,14 @@
 
     const parsed = classifyChannelInput(raw);
     if (!parsed) {
-      flashStatus(channelStatus, 'チャンネルID・@ハンドル・チャンネルURLのいずれかで入力してください');
+      showToast('チャンネルID・@ハンドル・チャンネルURLのいずれかで入力してください');
       return;
     }
 
     const submitBtn = channelForm.querySelector('button[type="submit"]');
     channelValue.disabled = true;
     submitBtn.disabled = true;
-    flashStatus(channelStatus, 'チャンネル情報を解決中...', false);
+    showToast('チャンネル情報を解決中...', false);
 
     let id;
     let handle;
@@ -206,14 +203,14 @@
     submitBtn.disabled = false;
 
     if (!id) {
-      flashStatus(channelStatus, 'チャンネルIDを取得できませんでした');
+      showToast('チャンネルIDを取得できませんでした');
       return;
     }
 
     currentData = await addFilter(KIND.CHANNEL_ID, id, { handle, name });
     channelValue.value = '';
     render();
-    flashStatus(channelStatus, `追加しました (${name || handle || id})`);
+    showToast(`追加しました (${name || handle || id})`);
   });
 
   titleForm.addEventListener('submit', async (e) => {
@@ -233,7 +230,7 @@
     a.download = 'yt-quick-filter-backup.json';
     a.click();
     URL.revokeObjectURL(url);
-    flashStatus(backupStatus, 'エクスポートしました');
+    showToast('エクスポートしました');
   });
 
   importBtn.addEventListener('click', () => importFile.click());
@@ -251,9 +248,9 @@
         globalToggle.checked = !!currentData.enabled;
         globalStatus.textContent = currentData.enabled ? '有効' : '無効';
         render();
-        flashStatus(backupStatus, 'インポートしました');
+        showToast('インポートしました');
       } catch (err) {
-        flashStatus(backupStatus, '無効なバックアップファイルです');
+        showToast('無効なバックアップファイルです');
       }
       importFile.value = '';
     };

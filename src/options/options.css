@@ -34,9 +34,18 @@ body {
 }
 
 .page {
-  max-width: 900px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 24px 16px 64px;
+}
+
+.search-row-page {
+  margin-bottom: 16px;
+}
+
+.search-row-page #search-input {
+  width: 100%;
+  max-width: 420px;
 }
 
 .card-row {
@@ -55,6 +64,37 @@ body {
 @media (max-width: 640px) {
   .card-row {
     flex-direction: column;
+  }
+}
+
+.column-row {
+  align-items: stretch;
+}
+
+.column-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.column-card .filter-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.column-filter-list {
+  overflow-y: auto;
+  max-height: 420px;
+}
+
+@media (max-width: 860px) {
+  .column-row {
+    flex-direction: column;
+  }
+
+  .column-filter-list {
+    max-height: 320px;
   }
 }
 
@@ -93,11 +133,6 @@ body {
   min-width: 28px;
 }
 
-#backup-status.header-status-line {
-  margin-top: -12px;
-  text-align: right;
-}
-
 .card {
   background: var(--card-bg);
   border: 1px solid var(--border);
@@ -109,24 +144,6 @@ body {
 .card h2 {
   font-size: 14px;
   margin: 0 0 10px;
-}
-
-.card-header-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 4px;
-}
-
-.card-header-row h2 {
-  margin: 0;
-  flex: 0 0 auto;
-}
-
-.card-header-row #search-input {
-  flex: 1 1 auto;
-  max-width: 420px;
-  margin-left: 16px;
 }
 
 .add-form {
@@ -274,11 +291,26 @@ button:hover {
   text-align: center;
 }
 
-.status-line {
-  margin-top: 8px;
-  font-size: 12px;
-  color: var(--muted);
-  min-height: 16px;
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 32px;
+  transform: translateX(-50%) translateY(8px);
+  background: #212121;
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+  z-index: 999999;
+  opacity: 0;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  pointer-events: none;
+}
+
+.toast.toast-visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }
 
 /* Toggle switch (shared with popup) */
