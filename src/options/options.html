@@ -12,36 +12,44 @@
     <header class="page-header">
       <img src="../../assets/icons/48.png" alt="" class="header-icon" />
       <h1>YT Quick Filter</h1>
+      <div class="header-backup">
+        <button type="button" id="export-btn">エクスポート</button>
+        <button type="button" id="import-btn">インポート</button>
+        <input type="file" id="import-file" accept="application/json" style="display:none" />
+      </div>
       <label class="switch" title="拡張機能全体のON/OFF">
         <input type="checkbox" id="global-toggle" />
         <span class="slider"></span>
       </label>
       <span class="global-status" id="global-status">有効</span>
     </header>
+    <div class="status-line header-status-line" id="backup-status"></div>
 
     <main class="page-main">
-      <section class="card">
-        <h2>チャンネルを追加</h2>
-        <form id="channel-form" class="add-form">
-          <input type="text" id="channel-value" placeholder="例: UCxxxxxxxxxxxxxxxxxxxxxx または @ハンドル名" autocomplete="off" />
-          <button type="submit">＋ 追加</button>
-        </form>
-        <p class="hint">
-          チャンネルID(<code>UC...</code>)・<code>@ハンドル名</code>・チャンネルURLのいずれでも入力できます。もう一方の識別子は自動で解決して一緒に保存されます。
-        </p>
-        <div class="status-line" id="channel-status"></div>
-      </section>
+      <div class="card-row">
+        <section class="card">
+          <h2>チャンネルを追加</h2>
+          <form id="channel-form" class="add-form">
+            <input type="text" id="channel-value" placeholder="例: UCxxxxxxxxxxxxxxxxxxxxxx または @ハンドル名" autocomplete="off" />
+            <button type="submit">＋ 追加</button>
+          </form>
+          <p class="hint">
+            チャンネルID(<code>UC...</code>)・<code>@ハンドル名</code>・チャンネルURLのいずれでも入力できます。もう一方の識別子は自動で解決して一緒に保存されます。
+          </p>
+          <div class="status-line" id="channel-status"></div>
+        </section>
 
-      <section class="card">
-        <h2>タイトルキーワードを追加</h2>
-        <form id="title-form" class="add-form">
-          <input type="text" id="title-value" placeholder="例: 【切り抜き】 または /正規表現/i" autocomplete="off" />
-          <button type="submit">＋ 追加</button>
-        </form>
-        <p class="hint">
-          通常は部分一致のキーワードとして扱われます。<code>/pattern/flags</code> の形式で書くと正規表現として扱われます。
-        </p>
-      </section>
+        <section class="card">
+          <h2>タイトルキーワードを追加</h2>
+          <form id="title-form" class="add-form">
+            <input type="text" id="title-value" placeholder="例: 【切り抜き】 または /正規表現/i" autocomplete="off" />
+            <button type="submit">＋ 追加</button>
+          </form>
+          <p class="hint">
+            通常は部分一致のキーワードとして扱われます。<code>/pattern/flags</code> の形式で書くと正規表現として扱われます。
+          </p>
+        </section>
+      </div>
 
       <section class="card">
         <div class="card-header-row">
@@ -58,16 +66,6 @@
           <h3>タイトル <span class="count" id="title-count">0</span></h3>
           <ul class="filter-list" id="title-list"></ul>
         </div>
-      </section>
-
-      <section class="card">
-        <h2>バックアップ</h2>
-        <div class="button-row">
-          <button type="button" id="export-btn">⭱ エクスポート</button>
-          <button type="button" id="import-btn">⭳ インポート</button>
-          <input type="file" id="import-file" accept="application/json" style="display:none" />
-        </div>
-        <div class="status-line" id="backup-status"></div>
       </section>
     </main>
   </div>
