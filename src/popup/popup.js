@@ -45,10 +45,13 @@
     const li = document.createElement('li');
     li.className = 'filter-row' + (filter.enabled ? '' : ' disabled');
 
+    const toggleId = `filter-toggle-${filter.id}`;
+
     const label = document.createElement('label');
     label.className = 'switch small';
     const input = document.createElement('input');
     input.type = 'checkbox';
+    input.id = toggleId;
     input.checked = filter.enabled;
     input.addEventListener('change', async () => {
       await setFilterEnabled(filter.id, input.checked);
@@ -60,8 +63,9 @@
 
     li.appendChild(label);
 
-    const value = document.createElement('span');
+    const value = document.createElement('label');
     value.className = 'value';
+    value.htmlFor = toggleId;
     if (filter.kind === KIND.CHANNEL_ID) {
       value.textContent = channelDisplayLabel(filter);
       value.title = [filter.name, filter.handle, filter.value].filter(Boolean).join(' · ');
