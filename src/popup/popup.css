@@ -64,16 +64,29 @@ body {
   font-size: 14px;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .settings-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
   border: 1px solid var(--border);
   background: transparent;
   color: var(--muted);
-  font: inherit;
-  font-size: 12px;
-  font-weight: 600;
-  padding: 4px 10px;
+  padding: 0;
   border-radius: 6px;
   cursor: pointer;
+}
+
+.settings-btn svg {
+  width: 16px;
+  height: 16px;
 }
 
 .settings-btn:hover {
