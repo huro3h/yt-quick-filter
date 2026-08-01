@@ -12,9 +12,28 @@
   const channelEmpty = document.getElementById('channel-empty');
   const titleEmpty = document.getElementById('title-empty');
   const openOptions = document.getElementById('open-options');
+  const tabButtons = document.querySelectorAll('.tab-btn');
+  const panels = {
+    title: document.getElementById('panel-title'),
+    channel: document.getElementById('panel-channel'),
+  };
 
   let currentData = null;
   let currentQuery = '';
+
+  function setActiveTab(tab) {
+    tabButtons.forEach((btn) => {
+      const isActive = btn.dataset.tab === tab;
+      btn.classList.toggle('active', isActive);
+      btn.setAttribute('aria-selected', String(isActive));
+    });
+    panels.title.hidden = tab !== 'title';
+    panels.channel.hidden = tab !== 'channel';
+  }
+
+  tabButtons.forEach((btn) => {
+    btn.addEventListener('click', () => setActiveTab(btn.dataset.tab));
+  });
 
   function matchesQuery(filter) {
     if (!currentQuery) return true;
@@ -83,6 +102,7 @@
   }
 
   async function init() {
+    setActiveTab('title');
     currentData = await getData();
     globalToggle.checked = !!currentData.enabled;
     render();
